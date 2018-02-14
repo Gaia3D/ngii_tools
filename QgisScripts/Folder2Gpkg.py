@@ -2,10 +2,11 @@
 
 # standard imports
 import sys, os, qgis.gui
+# sys.path.append('D:\Source\\ngii_tools\QgisScripts')
 from LayerList import LayerList
 
 # import OGR
-from osgeo import ogr, osr
+from osgeo import ogr, osr, gdal
 
 from qgis.core import *
 
@@ -17,7 +18,8 @@ except:
 
 
 CRS_ID = 5179
-FILE_DIR = "D:\Setup\NgiiData"
+# FILE_DIR = "D:\Setup\NgiiData"
+FILE_DIR = "D:\encode_shp"
 OUT_FILE = r"D:\temp\ngii.gpkg"
 
 
@@ -57,7 +59,8 @@ def main():
         ext = os.path.splitext(shp_nm)[-1]
         if ext == '.shp':
             # 원본 파일 열기
-            shp = shpDriver.Open(shp_nm, 0)
+            # shp = shpDriver.Open(shp_nm, 0)
+            shp = gdal.OpenEx(shp_nm, gdal.OF_VECTOR, ["ESRI Shapefile"], ["ENCODING=UTF-8"])
             shpLayer = shp.GetLayer()
 
             # 원본 레이어 정보 얻기
@@ -91,7 +94,7 @@ def main():
             shpLayer.ResetReading()
 
             # 파일 다 닫기
-            shp.Destroy()
+            # shp.Destroy()
             print("COMPLETED")
 
 
