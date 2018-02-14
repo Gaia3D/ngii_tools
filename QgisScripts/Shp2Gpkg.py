@@ -14,8 +14,8 @@ except:
     iface = qgis.gui.QgisInterface
 
 CRS_ID = 5179
-SRC_FILE = r"C:\Temp\GpkgSample\BLD01000.shp"
-OUT_FILE = r"C:\Temp\GpkgSample\ngii8.gpkg"
+SRC_FILE = r"D:\sample\NgiiData\WTR02000.shp"
+OUT_FILE = r"D:\temp\WTR02000.gpkg"
 LAYER_NAME = "BLD_Building"
 
 
@@ -101,6 +101,7 @@ def main():
 
             try:
                 uri = u"{}|layername={}".format(OUT_FILE, layerName)
+                print(uri)
                 layer = iface.addVectorLayer(uri, None, "ogr")
                 try:
                     layer.setName(layerName)
