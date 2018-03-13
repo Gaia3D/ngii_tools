@@ -120,25 +120,22 @@ class Shp2Gpkg :
                 print u"Layer {} failed to load!".format(layerName)
 
     def getFileNM(self, layerid):
-        layer_nm = None
-        if layerid.find('_N') > 0:
-            layer_nm = LayerList(layerid.replace('_N', ''))
-            layer_nm = layer_nm.getLayerNM()['layerENM']+'_N'
-        elif layerid.find('_R') > 0:
-            layer_nm = LayerList(layerid.replace('_R', ''))
-            layer_nm = layer_nm.getLayerNM()['layerENM'] + '_R'
-        elif layerid.find('_PE') > 0:
-            layer_nm = LayerList(layerid.replace('_PE', ''))
-            layer_nm = layer_nm.getLayerNM()['layerENM'] + '_PE'
-        elif layerid.find('_GE') > 0:
-            layer_nm = LayerList(layerid.replace('_GE', ''))
-            layer_nm = layer_nm.getLayerNM()['layerENM'] + '_GE'
-        elif layerid.find('_PGE') > 0:
-            layer_nm = LayerList(layerid.replace('_PGE', ''))
-            layer_nm = layer_nm.getLayerNM()['layerENM'] + '_PGE'
+        layerKey = layerid.split("_")
+        layerKey = LayerList(layerKey[0]).getLayerNM()
+        if layerKey is not None:
+            if layerid.find('_N') > 0:
+                layerNm = layerKey.getLayerNM()['layerENM']+'_N'
+            elif layerid.find('_R') > 0:
+                layerNm = layerKey.getLayerNM()['layerENM'] + '_R'
+            elif layerid.find('_PE') > 0:
+                layerNm = layerKey.getLayerNM()['layerENM'] + '_PE'
+            elif layerid.find('_GE') > 0:
+                layerNm = layerKey.getLayerNM()['layerENM'] + '_GE'
+            elif layerid.find('_PGE') > 0:
+                layerNm = layerKey.getLayerNM()['layerENM'] + '_PGE'
+            else:
+                layerNm = layerKey['layerENM']
         else:
-            layer_nm = LayerList(layerid)
-            layer_nm = layer_nm.getLayerNM()['layerENM']
-
-        return layer_nm
+            layerNm = None
+        return layerNm
 

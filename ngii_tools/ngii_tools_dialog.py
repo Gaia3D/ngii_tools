@@ -91,7 +91,8 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, iface, parent=None):
         """Constructor."""
         super(NgiiToolsDialog, self).__init__(parent)
-
+        self.shpPath = os.path.join(QgsApplication.qgisSettingsDirPath())
+        self.gpkgPath = os.path.join(QgsApplication.qgisSettingsDirPath())
         self.configFile = os.path.join(QgsApplication.qgisSettingsDirPath(), 'ngii_tools.ini')
         self.setupUi(self)
         self.iface = iface
