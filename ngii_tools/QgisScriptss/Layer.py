@@ -218,4 +218,7 @@ class LayerList :
                 "layerPNM": "TN_MAPDMC_INDX"
             }
         }
-        return layer_list[self.layerId]
+        if self.layerId in layer_list:
+            return layer_list[self.layerId]
+        else:
+            return None

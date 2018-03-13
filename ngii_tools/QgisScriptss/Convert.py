@@ -62,37 +62,36 @@ class Shp2Gpkg :
                 self.parent.progressMainWork.setValue(crridx)
                 shp = gdal.OpenEx(shp_nm, gdal.OF_VECTOR, ["ESRI Shapefile"], ["ENCODING=UTF-8"])
                 shpLayer = shp.GetLayer()
-
-                # 원본 레이어 정보 얻기
-                geomType = shpLayer.GetGeomType()
-                layerDefinition = shpLayer.GetLayerDefn()
-
-                # 원본 레이어와 동일하게 대상 레이어 만들기
-                # layer_nm = LayerList(file_name.replace('.shp', ''))
-                # layer_nm = layer_nm.getLayerNM()['layerENM']
                 layer_nm = self.getFileNM(file_name.replace('.shp', ''))
-                gpkgLayer = gpkg.CreateLayer(layer_nm.encode('utf-8'), crs, geom_type=geomType)
-                # self.parent.editLog.appendHtml(layer_nm)
-                for i in range(layerDefinition.GetFieldCount()):
-                    fieldDefn = layerDefinition.GetFieldDefn(i)
-                    gpkgLayer.CreateField(fieldDefn)
+                if len(shpLayer) > 0 and layer_nm is not None:
+                    # 원본 레이어 정보 얻기
+                    geomType = shpLayer.GetGeomType()
+                    layerDefinition = shpLayer.GetLayerDefn()
 
-                gpkgLayerDefn = gpkgLayer.GetLayerDefn()
-                shpCnt = len(shpLayer)
-                layerIdx = 0
-                self.parent.progressSubWork.setMinimum(0)
-                self.parent.progressSubWork.setMaximum(shpCnt)
-                # 원본 레이어의 객체 돌며
-                for shpFeature in shpLayer:
-                    # 동일한 대상 객체 생성
-                    gpkgFeature = ogr.Feature(gpkgLayerDefn)
-                    for i in range(gpkgLayerDefn.GetFieldCount()):
-                        gpkgFeature.SetField(gpkgLayerDefn.GetFieldDefn(i).GetNameRef(), shpFeature.GetField(i))
-                    geom = shpFeature.GetGeometryRef()
-                    gpkgFeature.SetGeometry(geom)
-                    gpkgLayer.CreateFeature(gpkgFeature)
-                    layerIdx = layerIdx+1
-                    self.parent.progressSubWork.setValue(layerIdx)
+                    # 원본 레이어와 동일하게 대상 레이어 만들기
+                    # layer_nm = self.getFileNM(file_name.replace('.shp', ''))
+                    gpkgLayer = gpkg.CreateLayer(layer_nm.encode('utf-8'), crs, geom_type=geomType)
+                    # self.parent.editLog.appendHtml(layer_nm)
+                    for i in range(layerDefinition.GetFieldCount()):
+                        fieldDefn = layerDefinition.GetFieldDefn(i)
+                        gpkgLayer.CreateField(fieldDefn)
+
+                    gpkgLayerDefn = gpkgLayer.GetLayerDefn()
+                    shpCnt = len(shpLayer)
+                    layerIdx = 0
+                    self.parent.progressSubWork.setMinimum(0)
+                    self.parent.progressSubWork.setMaximum(shpCnt)
+                    # 원본 레이어의 객체 돌며
+                    for shpFeature in shpLayer:
+                        # 동일한 대상 객체 생성
+                        gpkgFeature = ogr.Feature(gpkgLayerDefn)
+                        for i in range(gpkgLayerDefn.GetFieldCount()):
+                            gpkgFeature.SetField(gpkgLayerDefn.GetFieldDefn(i).GetNameRef(), shpFeature.GetField(i))
+                        geom = shpFeature.GetGeometryRef()
+                        gpkgFeature.SetGeometry(geom)
+                        gpkgLayer.CreateFeature(gpkgFeature)
+                        layerIdx = layerIdx+1
+                        self.parent.progressSubWork.setValue(layerIdx)
 
                 # 다 읽은 원본은 처음으로 포인터 돌리기
                 shpLayer.ResetReading()
