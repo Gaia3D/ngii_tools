@@ -181,7 +181,9 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
             if ext == '.shp':
                 layer_nm = file_name.replace('.shp', '')
                 std_chk = StdLayer(layer_nm.split("_")[0]).getStdNM()
-                if std_chk is not None:
+                shp = gdal.OpenEx(shp_nm, gdal.OF_VECTOR, ["ESRI Shapefile"], ["ENCODING=UTF-8"])
+                shpLayer = shp.GetLayer()
+                if std_chk is not None and len(shpLayer) > 0:
                     shp_list.append(file_name.replace('.shp', ''))
 
         if len(shp_list) == 0:
