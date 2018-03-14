@@ -117,8 +117,7 @@ class ChangeGPKG:
                 print u"Layer {} failed to load!".format(layerName)
 
     def getFileNM(self, layerid):
-        layerKey = layerid.split("_")
-        layerKey = StdLayer(layerKey[0]).getStdNM()
+        layerKey = StdLayer(layerid.split("_")[0]).getStdNM()
         if layerKey is not None:
             if layerid.find('_N') > 0:
                 layerNm = layerKey['layerENM']+'_N'

@@ -28,7 +28,7 @@ from qgis.core import *
 import ConfigParser
 import os
 
-from PySHP2.ChangeGPKG import ChangeGPKG
+from PySHP2.ChangeGPKG import ChangeGPKG, StdLayer
 
 from osgeo import ogr, gdal, osr
 gdal.UseExceptions()
@@ -39,10 +39,11 @@ def force_gui_update():
 def addTableItem(parent, layer_list):
     parent.setRowCount(len(layer_list))
     layerCnt = 0
+    print layer_list
     for layernm in layer_list :
         # 아이템 생성
-        item_shp = QtGui.QTableWidgetItem(layernm.split("_")[0])
         item_chk = QtGui.QTableWidgetItem(u"√")
+        item_shp = QtGui.QTableWidgetItem(layernm.split("_")[0])
         # 수직 수평 가운데 정렬
         item_shp.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
         item_chk.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
@@ -178,7 +179,10 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
             shp_nm = os.path.join(self.shpPath, file_name)
             ext = os.path.splitext(shp_nm)[-1]
             if ext == '.shp':
-                shp_list.append(file_name.replace('.shp', ''))
+                layer_nm = file_name.replace('.shp', '')
+                std_chk = StdLayer(layer_nm.split("_")[0]).getStdNM()
+                if std_chk is not None:
+                    shp_list.append(file_name.replace('.shp', ''))
 
         if len(shp_list) == 0:
             self.btnStart.setEnabled(False)
