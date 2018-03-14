@@ -39,7 +39,6 @@ def force_gui_update():
 def addTableItem(parent, layer_list):
     parent.setRowCount(len(layer_list))
     layerCnt = 0
-    print layer_list
     for layernm in layer_list :
         # 아이템 생성
         item_chk = QtGui.QTableWidgetItem(u"√")

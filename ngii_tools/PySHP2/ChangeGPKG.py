@@ -55,12 +55,12 @@ class ChangeGPKG:
             if ext == '.shp':
                 # 원본 파일 열기
                 # shp = shpDriver.Open(shp_nm, 0)
-                crridx = crridx+1
-                self.parent.progressMainWork.setValue(crridx)
                 shp = gdal.OpenEx(shp_nm, gdal.OF_VECTOR, ["ESRI Shapefile"], ["ENCODING=UTF-8"])
                 shpLayer = shp.GetLayer()
                 layer_nm = self.getFileNM(file_name.replace('.shp', ''))
                 if len(shpLayer) > 0 and layer_nm is not None:
+                    crridx = crridx + 1
+                    self.parent.progressMainWork.setValue(crridx)
                     # 원본 레이어 정보 얻기
                     geomType = shpLayer.GetGeomType()
                     layerDefinition = shpLayer.GetLayerDefn()
