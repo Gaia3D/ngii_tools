@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-class LayerList :
+
+class StdLayer:
 
     def __init__(self, layerId):
         self.layerId = layerId
 
-    def getLayerNM(self):
+    def getStdNM(self):
         layer_list = {
             "ARB01000" : {
                 "layerKNM" : u"시도구역경계",

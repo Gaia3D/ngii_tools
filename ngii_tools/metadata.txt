@@ -11,10 +11,10 @@ name=ngii_tools
 qgisMinimumVersion=2.14
 description= shp2gpkg to QGIS
 version=1.2
-author=BJ Jang of Gaia3D
-email=jangbi882@gmail.com
+author=
+email=
 
-about=This program is an assistant tool that allows you to read OnMap PDF files distributed by the Korea National Geographic Information Insititute(NGII) from QGIS and display them in the correct geographical location. This program has been developed as part of the 'Development of the Spatial information quality inspection System' project by NGII.
+about=
 
 tracker=https://github.com/Gaia3D/ngii_tools/issues
 repository=https://github.com/Gaia3D/ngii_tools

@@ -28,10 +28,8 @@ from qgis.core import *
 import ConfigParser
 import os
 
-from QgisScriptss import Convert
+from PySHP2.ChangeGPKG import ChangeGPKG
 
-
-# import OGR
 from osgeo import ogr, gdal, osr
 gdal.UseExceptions()
 
@@ -91,8 +89,6 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, iface, parent=None):
         """Constructor."""
         super(NgiiToolsDialog, self).__init__(parent)
-        self.shpPath = os.path.join(QgsApplication.qgisSettingsDirPath())
-        self.gpkgPath = os.path.join(QgsApplication.qgisSettingsDirPath())
         self.configFile = os.path.join(QgsApplication.qgisSettingsDirPath(), 'ngii_tools.ini')
         self.setupUi(self)
         self.iface = iface
@@ -188,7 +184,7 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
             self.btnStart.setEnabled(False)
             self.error(u"변활할 SHP 파일이 없습니다. 다시 선택해주세요.")
             self.tableLayer.clearContents()
-        else :
+        else:
             if not self.flag:
                 self.order(u"GPKG 파일을 저장할 폴더를 선택해주세요.")
             else:
@@ -216,7 +212,7 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.order(u"SHP 파일을 GPKG 파일로 변환을 시작합니다.")
         self.iface.newProject()
         force_gui_update()
-        Convert.Shp2Gpkg(self, self.shpPath, self.gpkgPath + "\\ngii.gpkg", self.layerCnt).Folder2Gpkg()
+        ChangeGPKG(self, self.shpPath, self.gpkgPath + "\\ngii.gpkg", self.layerCnt).Folder2Gpkg()
         self.order(u"SHP 파일을 GPKG 파일로 변환이 완료되었습니다.")
 
 

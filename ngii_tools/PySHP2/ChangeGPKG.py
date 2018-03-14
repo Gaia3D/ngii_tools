@@ -2,14 +2,11 @@
 
 # standard imports
 import os
-from Layer import LayerList
-# import OGR
+from StdLayer import StdLayer
 from osgeo import ogr, osr, gdal
 
-from qgis.core import *
 
-class Shp2Gpkg :
-
+class ChangeGPKG:
     def __init__(self, parent, file_dir, out_dir, cnt):
         self.file_dir = file_dir
         self.out_dir = out_dir
@@ -121,18 +118,18 @@ class Shp2Gpkg :
 
     def getFileNM(self, layerid):
         layerKey = layerid.split("_")
-        layerKey = LayerList(layerKey[0]).getLayerNM()
+        layerKey = StdLayer(layerKey[0]).getStdNM()
         if layerKey is not None:
             if layerid.find('_N') > 0:
-                layerNm = layerKey.getLayerNM()['layerENM']+'_N'
+                layerNm = layerKey['layerENM']+'_N'
             elif layerid.find('_R') > 0:
-                layerNm = layerKey.getLayerNM()['layerENM'] + '_R'
+                layerNm = layerKey['layerENM'] + '_R'
             elif layerid.find('_PE') > 0:
-                layerNm = layerKey.getLayerNM()['layerENM'] + '_PE'
+                layerNm = layerKey['layerENM'] + '_PE'
             elif layerid.find('_GE') > 0:
-                layerNm = layerKey.getLayerNM()['layerENM'] + '_GE'
+                layerNm = layerKey['layerENM'] + '_GE'
             elif layerid.find('_PGE') > 0:
-                layerNm = layerKey.getLayerNM()['layerENM'] + '_PGE'
+                layerNm = layerKey['layerENM'] + '_PGE'
             else:
                 layerNm = layerKey['layerENM']
         else:
