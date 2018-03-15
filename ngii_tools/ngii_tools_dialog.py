@@ -39,14 +39,15 @@ def force_gui_update():
 def addTableItem(parent, layer_list):
     parent.setRowCount(len(layer_list))
     layerCnt = 0
-    for layernm in layer_list :
+    for layernm in layer_list:
         # 아이템 생성
         item_chk = QtGui.QTableWidgetItem(u"√")
-        item_shp = QtGui.QTableWidgetItem(layernm.split("_")[0])
+        # 파일명에서 뒤에 글자는 지움
+        item_shp = QtGui.QTableWidgetItem(StdLayer().getStdChk(layernm))
         # 수직 수평 가운데 정렬
-        item_shp.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+        item_shp.setTextAlignment(Qt.AlignVCenter)
         item_chk.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-        # 자바스크립트처럼 .연산자로 한번에 못씀. 폰트설정
+        # 폰트 굵게
         chk_font = QtGui.QFont()
         chk_font.setBold(True)
         item_chk.setFont(chk_font)
@@ -61,7 +62,7 @@ def addTableItem(parent, layer_list):
             parent.setItem(layerCnt, 5, item_chk)
         elif layernm.find('_PGE') > 0:
             parent.setItem(layerCnt, 6, item_chk)
-        else :
+        else:
            parent.setItem(layerCnt, 1, item_chk)
         layerCnt = layerCnt+1
 
@@ -179,7 +180,7 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
             ext = os.path.splitext(shp_nm)[-1]
             if ext == '.shp':
                 layer_nm = file_name.replace('.shp', '')
-                std_chk = StdLayer(layer_nm.split("_")[0]).getStdNM()
+                std_chk = StdLayer().getStdChk(layer_nm)
                 shp = gdal.OpenEx(shp_nm, gdal.OF_VECTOR, ["ESRI Shapefile"], ["ENCODING=UTF-8"])
                 shpLayer = shp.GetLayer()
                 if std_chk is not None and len(shpLayer) > 0:
@@ -188,7 +189,7 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
         if len(shp_list) == 0:
             self.btnStart.setEnabled(False)
             self.error(u"변활할 SHP 파일이 없습니다. 다시 선택해주세요.")
-            self.tableLayer.clearContents()
+            self.tableLayer.setRowCount(0);
         else:
             if not self.flag:
                 self.order(u"GPKG 파일을 저장할 폴더를 선택해주세요.")

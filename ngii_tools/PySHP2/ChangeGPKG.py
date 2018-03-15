@@ -57,7 +57,7 @@ class ChangeGPKG:
                 # shp = shpDriver.Open(shp_nm, 0)
                 shp = gdal.OpenEx(shp_nm, gdal.OF_VECTOR, ["ESRI Shapefile"], ["ENCODING=UTF-8"])
                 shpLayer = shp.GetLayer()
-                layer_nm = self.getFileNM(file_name.replace('.shp', ''))
+                layer_nm = StdLayer().getStdChk(file_name.replace('.shp', ''))
                 if len(shpLayer) > 0 and layer_nm is not None:
                     crridx = crridx + 1
                     self.parent.progressMainWork.setValue(crridx)
@@ -66,8 +66,7 @@ class ChangeGPKG:
                     layerDefinition = shpLayer.GetLayerDefn()
 
                     # 원본 레이어와 동일하게 대상 레이어 만들기
-                    # layer_nm = self.getFileNM(file_name.replace('.shp', ''))
-                    gpkgLayer = gpkg.CreateLayer(layer_nm.encode('utf-8'), crs, geom_type=geomType)
+                    gpkgLayer = gpkg.CreateLayer(file_name.replace('.shp', '').encode('utf-8'), crs, geom_type=geomType)
                     # self.parent.editLog.appendHtml(layer_nm)
                     for i in range(layerDefinition.GetFieldCount()):
                         fieldDefn = layerDefinition.GetFieldDefn(i)
@@ -115,23 +114,3 @@ class ChangeGPKG:
 
             if not layer:
                 print u"Layer {} failed to load!".format(layerName)
-
-    def getFileNM(self, layerid):
-        layerKey = StdLayer(layerid.split("_")[0]).getStdNM()
-        if layerKey is not None:
-            if layerid.find('_N') > 0:
-                layerNm = layerKey['layerENM']+'_N'
-            elif layerid.find('_R') > 0:
-                layerNm = layerKey['layerENM'] + '_R'
-            elif layerid.find('_PE') > 0:
-                layerNm = layerKey['layerENM'] + '_PE'
-            elif layerid.find('_GE') > 0:
-                layerNm = layerKey['layerENM'] + '_GE'
-            elif layerid.find('_PGE') > 0:
-                layerNm = layerKey['layerENM'] + '_PGE'
-            else:
-                layerNm = layerKey['layerENM']
-        else:
-            layerNm = None
-        return layerNm
-
