@@ -102,6 +102,8 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.tableLayer.resizeColumnsToContents()
         self.header = self.tableLayer.horizontalHeader()
         self.header.setResizeMode(0, QtGui.QHeaderView.Stretch)
+        self.msg = QtGui.QMessageBox()
+        self.msg.setIcon(QtGui.QMessageBox.Warning)
         # self.btnStart.setEnabled(True)
 
     def tr(self, message):
@@ -181,7 +183,14 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
             if ext == '.shp':
                 layer_nm = file_name.replace('.shp', '')
                 std_chk = StdLayer().getStdChk(layer_nm)
-                shp = gdal.OpenEx(shp_nm, gdal.OF_VECTOR, ["ESRI Shapefile"], ["ENCODING=UTF-8"])
+                try:
+                    shp = gdal.OpenEx(shp_nm, gdal.OF_VECTOR, ["ESRI Shapefile"], ["ENCODING=UTF-8"])
+                except:
+                    self.errorMsg(u"{}는 올바른 Shape 파일이 아닙니다.".format(layer_nm))
+                    self.btnStart.setEnabled(False)
+                    self.tableLayer.setRowCount(0)
+                    self.order("")
+                    return
                 shpLayer = shp.GetLayer()
                 if std_chk is not None and len(shpLayer) > 0:
                     shp_list.append(file_name.replace('.shp', ''))
@@ -189,7 +198,7 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
         if len(shp_list) == 0:
             self.btnStart.setEnabled(False)
             self.error(u"변활할 SHP 파일이 없습니다. 다시 선택해주세요.")
-            self.tableLayer.setRowCount(0);
+            self.tableLayer.setRowCount(0)
         else:
             if not self.flag:
                 self.order(u"GPKG 파일을 저장할 폴더를 선택해주세요.")
@@ -220,6 +229,11 @@ class NgiiToolsDialog(QtGui.QDialog, FORM_CLASS):
         force_gui_update()
         ChangeGPKG(self, self.shpPath, self.gpkgPath + "\\ngii.gpkg", self.layerCnt).Folder2Gpkg()
         self.order(u"SHP 파일을 GPKG 파일로 변환이 완료되었습니다.")
+
+    # 에러 메세지 팝업
+    def errorMsg(self, err):
+        self.msg.setText(err)
+        self.msg.exec_()
 
 
 
